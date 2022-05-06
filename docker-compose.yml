@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: compilerbook
+    tty: true
+    volumes:
+      - .:/workspace
+      - ~/.bashrc:/home/user/.bashrc
+      - ~/.bash:/home/user/.bash
+      - ~/.vimrc:/home/user/.vimrc
+      - ~/.gitconfig:/home/user/.gitconfig
+      - ~/.gdbinit:/home/user/.gdbinit
+    working_dir: "/workspace"
+
