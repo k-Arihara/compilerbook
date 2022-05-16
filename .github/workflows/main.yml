@@ -25,6 +25,4 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Compiler test
         run: |
-          cd ..
-          chmod +x test.sh
           make test
