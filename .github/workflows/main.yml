@@ -21,6 +21,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Compiler test
-        run: |
-          chmod +x test.sh
-          make test
+        run: make test
