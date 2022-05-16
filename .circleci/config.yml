@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run:
           name: "compiler test"
-          command:
+          command: |
             chmod +x ./test.sh
             make test
 
