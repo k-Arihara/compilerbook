@@ -17,7 +17,7 @@ jobs:
       - run:
           name: "compiler test"
           command:
-            chmod +x test.sh
+            chmod +x ./test.sh
             make test
 
 # Invoke jobs via workflows
