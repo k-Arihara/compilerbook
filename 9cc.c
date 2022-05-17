@@ -18,6 +18,7 @@ struct Token {
   Token* next;
   int val;
   char* str;
+  int len;
 };
 
 Token* token;
@@ -38,7 +39,7 @@ void error_at(char* loc, char* fmt, ...) {
 }
 
 bool consume(char op) {
-  if (token->kind != TK_RESERVED || token->str[0] != op)
+  if (token->kind != TK_RESERVED || token->str[0] != op || memcmp(token->str, op, token->len))
     return false;
   token = token->next;
   return true;
