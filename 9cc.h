@@ -11,6 +11,8 @@ typedef enum {
   TK_EOF,
 } TokenKind;
 
+typedef struct Token Token;
+
 struct Token {
   TokenKind kind;
   Token* next;
@@ -31,15 +33,14 @@ typedef enum {
   ND_NUM, // Integer
 } NodeKind;
 
+typedef struct Node Node;
+
 struct Node {
   NodeKind kind;
   Node* lhs;
   Node* rhs;
   int val;
 };
-
-typedef struct Token Token;
-typedef struct Node Node;
 
 Node* expr();
 Node* equality();
@@ -48,3 +49,6 @@ Node* add();
 Node* mul();
 Node* primary();
 Node* unary();
+
+void gen(Node* node);
+Token* tokenize(char* p);
