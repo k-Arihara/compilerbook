@@ -7,6 +7,7 @@
 
 typedef enum {
   TK_RESERVED,
+  TK_IDENT,
   TK_NUM,
   TK_EOF,
 } TokenKind;
@@ -22,15 +23,18 @@ struct Token {
 };
 
 typedef enum {
-  ND_ADD, // +
-  ND_SUB, // -
-  ND_MUL, // *
-  ND_DIV, // /
-  ND_EQ,  // ==
-  ND_NE,  // !=
-  ND_LT,  // LT
-  ND_LE,  // <=
-  ND_NUM, // Integer
+  ND_ADD,        // +
+  ND_SUB,        // -
+  ND_MUL,        // *
+  ND_DIV,        // /
+  ND_ASSIGN,     // =
+  ND_EXPR_STMT,  // ;
+  ND_EQ,         // ==
+  ND_NE,         // !=
+  ND_LT,         // LT
+  ND_LE,         // <=
+  ND_LVAR,       // ローカル変数
+  ND_NUM,        // Integer
 } NodeKind;
 
 typedef struct Node Node;
@@ -39,16 +43,20 @@ struct Node {
   NodeKind kind;
   Node* lhs;
   Node* rhs;
-  int val;
+  int val; // kindがND_NUMの場合のみ
+  int offset; // kindがND_LVARの場合のみ
 };
 
+Node* program();
+Node* stmt();
 Node* expr();
+Node* assign();
 Node* equality();
 Node* relational();
 Node* add();
 Node* mul();
-Node* primary();
 Node* unary();
+Node* primary();
 
 void gen(Node* node);
 Token* tokenize(char* p);
