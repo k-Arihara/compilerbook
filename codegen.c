@@ -19,7 +19,7 @@ void gen(Node* node){
   case ND_LVAR:
     gen_lval(node);
     printf("  pop rax\n");
-    printf("  mov rax, [rax\n");
+    printf("  mov rax, [rax]\n");
     printf("  push rax\n");
     return;
   
