@@ -116,7 +116,7 @@ Token* tokenize(char* p) {
       cur = new_token(TK_IDENT, cur, p, 0);
       char* q = p;
       cur->val = strtol(p, &p, 10);
-      while (!strchr("+-*/()<>;= ", *p))
+      while (!strchr("+-*/()<>;!= ", *p))
         p++;
       cur->len = p - q;
       new_lvar(q, p - q);
