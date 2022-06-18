@@ -3,6 +3,7 @@
 extern Token* token;
 extern char* user_input;
 extern Node* code[100];
+extern LVar* locals;
 
 void error_at(char* loc, char* fmt, ...) {
   va_list ap;
@@ -27,7 +28,7 @@ bool consume(char* op) {
 }
 
 Token* consume_ident() {
-  if (token->kind != TK_IDENT || 1 != token->len)
+  if (token->kind != TK_IDENT)
     return NULL;
   Token* tok = token;
   token = token->next;
@@ -51,6 +52,19 @@ int expect_number() {
 
 bool at_eof() {
   return token->kind == TK_EOF;
+}
+
+LVar* new_lvar(char* str, int len){
+  LVar* lvar = calloc(1, sizeof(LVar));
+  lvar->name = str;
+  lvar->len = len;
+  if(locals == NULL){
+    lvar->offset = 8;
+  } else {
+    lvar->offset = locals->offset + 8;
+  }
+  lvar->next = locals;
+  locals = lvar;
 }
 
 Token* new_token(TokenKind kind, Token* cur, char* str, int len) {
@@ -98,8 +112,14 @@ Token* tokenize(char* p) {
       continue;
     }
 
-    if ('a' <= *p && *p <= 'z') {
-      cur = new_token(TK_IDENT, cur, p++, 1);
+    if ('a' <= *p && *p <= 'z' || 'A' <= *p && *p <= 'Z') {
+      cur = new_token(TK_IDENT, cur, p, 0);
+      char* q = p;
+      cur->val = strtol(p, &p, 10);
+      while (!strchr("+-*/()<>;= ", *p))
+        p++;
+      cur->len = p - q;
+      new_lvar(q, p - q);
       continue;
     }
 
@@ -122,6 +142,14 @@ Node* new_node_num(int val) {
   node->kind = ND_NUM;
   node->val = val;
   return node;
+}
+
+LVar *find_lvar(Token* tok){
+  for (LVar* var = locals; var; var = var->next){
+    if(var -> len == tok->len && !memcmp(tok->str, var->name, var->len))
+      return var;
+  }
+  return NULL;
 }
 
 // program = stmt*
@@ -233,9 +261,23 @@ Node* primary() {
   if (tok) {
     Node* node = calloc(1, sizeof(Node));
     node->kind = ND_LVAR;
-    node->offset = (tok->str[0] - 'a' + 1) * 8; // 208 == ('z' - 'a' + 1) * 8
+
+    LVar* lvar = find_lvar(tok);
+    if (lvar) {
+      node->offset = lvar->offset;
+    } else {
+      lvar = calloc(1, sizeof(LVar));
+      lvar->next = locals;
+      lvar->name = tok->str;
+      lvar->len = tok->len;
+      lvar->offset = locals->offset + 8;
+      node->offset = lvar->offset;
+      locals = lvar;
+    }
     return node;
   }
 
   return new_node_num(expect_number());
 }
+
+

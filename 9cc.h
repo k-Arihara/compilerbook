@@ -47,6 +47,15 @@ struct Node {
   int offset; // kindがND_LVARの場合のみ
 };
 
+typedef struct LVar LVar;
+
+struct LVar{
+  LVar* next;
+  char* name;
+  int len;
+  int offset;
+};
+
 Node* program();
 Node* stmt();
 Node* expr();

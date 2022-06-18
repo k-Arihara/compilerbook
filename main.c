@@ -3,6 +3,7 @@
 Token* token;
 char* user_input;
 Node* code[100];
+LVar* locals = NULL;
 
 int main(int argc, char** argv) {
   if (argc != 2) {
