@@ -80,6 +80,10 @@ bool startswith(char* p, char* q) {
   return memcmp(p, q, strlen(q)) == 0;
 }
 
+int is_alnum(char c){
+  return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') ||  ('0' <= c && c <= '9') || (c == '_');
+}
+
 Token* tokenize(char* p) {
   Token head;
   head.next = NULL;
@@ -112,11 +116,11 @@ Token* tokenize(char* p) {
       continue;
     }
 
-    if ('a' <= *p && *p <= 'z' || 'A' <= *p && *p <= 'Z') {
+    if (is_alnum(*p)) {
       cur = new_token(TK_IDENT, cur, p, 0);
       char* q = p;
       cur->val = strtol(p, &p, 10);
-      while (!strchr("+-*/()<>;!= ", *p))
+      while (is_alnum(*p))
         p++;
       cur->len = p - q;
       new_lvar(q, p - q);
