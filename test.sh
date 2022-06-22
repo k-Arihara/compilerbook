@@ -48,4 +48,8 @@ assert 3 'a=3; a;'
 assert 8 'a=3; z=5; a+z;'
 assert 6 'a=b=3; a+b;'
 
+assert 3 'asdf=3;asdf;'
+assert 8 'sample1=3;sample2 = 5; sample1+ sample2;'
+assert 6 '_A=_B=3; _A+_B;'
+
 echo OK
